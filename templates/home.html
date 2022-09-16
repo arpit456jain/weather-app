@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Weather template</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+            * {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: linear-gradient(#599afa 50%, #4169a5 50%);
+	font-family: 'Montserrat', sans-serif;
+	min-height: 100vh;
+}
+
+main {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	width: 100%;
+	min-height: 100vh;
+	margin-block: 2em;
+}
+
+.title {
+	color: #fff;
+	margin-bottom: 1em;
+}
+
+.weather-container {
+	position: relative;
+	min-height: 90%;
+	width: 90%;
+	max-width: 1000px;
+	background-color: rgb(255 255 255 / 0.6);
+	border-radius: 2rem;
+	padding: 1rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	backdrop-filter: blur(0.5rem);
+	-webkit-backdrop-filter: blur(0.5rem);
+	margin-inline: 1em;
+	color: #2a456c;
+}
+
+.date {
+	position: relative;
+	font-size: 1.3rem;
+}
+
+.top-section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.condition {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 1em;
+}
+
+.condition p {
+	font-size: 2.5rem;
+}
+
+.condition img {
+	height: 120px;
+}
+
+.temp h1 {
+	font-size: 4.2rem;
+	font-weight: 400;
+}
+
+.hilo {
+	display: flex;
+	justify-content: space-between;
+	font-size: 1.1em;
+}
+
+.extra-info {
+	margin-block: 1.5em;
+	display: grid;
+	grid-template-areas:
+		'rise wind'
+		'set humidity'
+		'aqi pressure';
+	gap: 1.5em;
+}
+
+.info {
+	text-align: center;
+}
+
+.info .param-name {
+	color: #37588b;
+	font-size: 1rem;
+}
+
+.info .big {
+	font-size: 1.5rem;
+}
+
+@media screen and (min-width: 800px) {
+	main {
+		margin-block: 0;
+	}
+
+	.weather-container {
+		min-height: 500px;
+		gap: 2em;
+	}
+
+	.date {
+		position: absolute;
+		top: 0.2em;
+	}
+
+	.top-section {
+		display: grid;
+		grid-template-areas: 'temp condition';
+		justify-content: space-between;
+		
+	}
+
+	.hilo {
+		font-size: 1.4rem;
+	}
+
+	.temp h1 {
+		font-size: 6rem;
+	}
+
+	.condition img {
+		height: 160px;
+	}
+
+	.condition {
+		flex-direction: row;
+	}
+
+	.extra-info {
+		grid-template-areas:
+			'rise wind humidity'
+			'set aqi pressure';
+	}
+}
+        </style>
+	</head>
+	<body>
+        
+        <div>
+            <form action="" method="post">
+                {% csrf_token %}
+                <label for="gsearch">Search City:</label>
+                <input type="search" id="city" name="city">
+                <input type="submit">
+              </form>
+        </div>
+        {% if error == True %}
+            <h1> Enter the name of city correctly</h1>
+
+        {% endif %}
+        {% if status == True %}
+		<main>
+            
+            {% if city == region %}
+            <h1 class="title">{{city}},{{country}}</h1>
+            {% else %}
+            <h1 class="title">{{city}},{{region}},{{country}}</h1>
+            {% endif %}
+			
+			<div class="weather-container">
+				<time datetime="2021-10-2" class="date">{{time}}</time>
+				<div class="top-section">
+					<div class="temp" style="grid-area: temp">
+						<h1>{{temp}}&deg;C</h1>
+						<!-- <div class="hilo">
+							<p class="low"><span>Hi: </span>{{temp}} &deg;C</p>
+							<p class="high"><span>Lo: </span>{{temp}} + 15&deg;C</p>
+						</div> -->
+					</div>
+				</div>
+				<div class="bottom-section">
+					<div class="extra-info">
+						<div class="info" style="grid-area: rise">
+							<p class="param-name">Longitude</p>
+							<time datetime="5:30" class="big">{{lat}}</time>
+						</div>
+						<div class="info" style="grid-area: set">
+							<p class="param-name">Latitude</p>
+							<time datetime="19:30" class="big">{{lat}}</time>
+						</div>
+						<div class="info" style="grid-area: wind">
+							<p class="param-name">Wind Speed</p>
+							<p class="big">{{wind_speed}}Km/h</p>
+						</div>
+						<div class="info" style="grid-area: humidity">
+							<p class="param-name">Humidity</p>
+							<p class="big">{{humidity}}%</p>
+						</div>
+						<!-- <div class="info" style="grid-area: aqi">
+							<p class="param-name">AQI</p>
+							<p class="big">172</p>
+						</div> -->
+						<div class="info" style="grid-area: pressure">
+							<p class="param-name">Pressure</p>
+							<p class="big">{{pressure_mb}}hPa</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+        {% endif %}
+	</body>
+</html>
